@@ -7,6 +7,15 @@ describe("addTask", () => {
   let req: any;
   let res: any;
 
+   const mockTask = {
+    id: "1",
+    name: "Read",
+    description: "Read the book",
+    status: "Pending",
+    priority: "Low",
+    deadline: "2025-11-20",
+  };
+
   beforeEach(() => {
     req = { body: {} };
     res = {
@@ -17,18 +26,12 @@ describe("addTask", () => {
   });
 
   test("should create a task and return 201", async () => {
-    req.body = {
-      name: "Read",
-      description: "Read the book",
-      status: "Pending",
-      priority: "Low",
-      deadline: "sep15",
-    };
-    (addTasks as any).mockResolvedValue(req.body);
+    req.body = mockTask;
+    (addTasks as jest.Mock).mockResolvedValue(mockTask);
     await addTask(req, res);
-    expect(addTasks).toHaveBeenCalled();
+    expect(addTasks).toHaveBeenCalledWith(mockTask);
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(req.body);
+    expect(res.json).toHaveBeenCalledWith(mockTask);
   });
 
   test("should return 400 if some fields are missing", async () => {
@@ -41,14 +44,8 @@ describe("addTask", () => {
   });
 
   test("should return 500 if service throws error", async () => {
-    req.body = {
-      name: "Read",
-      description: "Read the book",
-      status: "Pending",
-      priority: "Low",
-      deadline: "sep15",
-    };
-    (addTasks as any).mockRejectedValue(new Error("something went wrong"));
+    req.body = mockTask;
+    (addTasks as jest.Mock).mockRejectedValue(new Error("something went wrong"));
     await addTask(req, res);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
@@ -57,24 +54,15 @@ describe("addTask", () => {
   });
   
   test("should return all tasks and 200", async () => {
-    const mockTasks = [
-      {
-        name: "Read",
-        description: "Read the book",
-        status: "Pending",
-        priority: "Low",
-        deadline: "sep15",
-        id: "123",
-      },
-    ];
-    (getTasks as any).mockResolvedValue(mockTasks);
+    (getTasks as jest.Mock).mockResolvedValue([mockTask]);
     await getTask(req, res);
+    expect(getTasks).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(mockTasks);
+    expect(res.json).toHaveBeenCalledWith([mockTask]);
   });
 
   test("should return 500 if service throws error", async () => {
-    (getTasks as any).mockRejectedValue(new Error("fails"));
+    (getTasks as jest.Mock).mockRejectedValue(new Error("fails"));
     await getTask(req, res);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({

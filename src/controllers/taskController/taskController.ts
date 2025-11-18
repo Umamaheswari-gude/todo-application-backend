@@ -27,6 +27,13 @@ export const getTask = async (_req: Request, res: Response): Promise<void> => {
 
 export const updateTask = async (req: Request, res: Response ) => {
    const { id } = req.params;
+   const { name, description, status, priority, deadline } = req.body;
+
+    if (!name || !description || !status || !priority || !deadline ) {
+    return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
     try {
         const updatedTask = await updateTasks(id, req.body);
         return res.status(200).json(updatedTask);

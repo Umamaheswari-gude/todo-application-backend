@@ -1,11 +1,20 @@
-import { addTasks } from "../../services/taskService/taskService";
-import { addTask } from "./taskController";
+import { addTasks, getTasks } from "../../services/taskService/taskService";
+import { addTask, getTask } from "./taskController";
 
-jest.mock("../../services/addTask/addTask");
+jest.mock("../../services/taskService/taskService");
 
 describe("addTask", () => {
   let req: any;
   let res: any;
+
+   const mockTask = {
+    id: "1",
+    name: "Read",
+    description: "Read the book",
+    status: "Pending",
+    priority: "Low",
+    deadline: "2025-11-20",
+  };
 
   beforeEach(() => {
     req = { body: {} };
@@ -17,18 +26,12 @@ describe("addTask", () => {
   });
 
   test("should create a task and return 201", async () => {
-    req.body = {
-      name: "Read",
-      description: "Read the book",
-      status: "Pending",
-      priority: "Low",
-      deadline: "sep15",
-    };
-    (addTasks as any).mockResolvedValue(req.body);
+    req.body = mockTask;
+    (addTasks as jest.Mock).mockResolvedValue(mockTask);
     await addTask(req, res);
-    expect(addTasks).toHaveBeenCalled();
+    expect(addTasks).toHaveBeenCalledWith(mockTask);
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(req.body);
+    expect(res.json).toHaveBeenCalledWith(mockTask);
   });
 
   test("should return 400 if some fields are missing", async () => {
@@ -41,18 +44,29 @@ describe("addTask", () => {
   });
 
   test("should return 500 if service throws error", async () => {
-    req.body = {
-      name: "Read",
-      description: "Read the book",
-      status: "Pending",
-      priority: "Low",
-      deadline: "sep15",
-    };
-    (addTasks as any).mockRejectedValue(new Error("something went wrong"));
+    req.body = mockTask;
+    (addTasks as jest.Mock).mockRejectedValue(new Error("something went wrong"));
     await addTask(req, res);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       error: "Failed to create tasks",
+    });
+  });
+  
+  test("should return all tasks and 200", async () => {
+    (getTasks as jest.Mock).mockResolvedValue([mockTask]);
+    await getTask(req, res);
+    expect(getTasks).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith([mockTask]);
+  });
+
+  test("should return 500 if service throws error", async () => {
+    (getTasks as jest.Mock).mockRejectedValue(new Error("fails"));
+    await getTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Failed to fetch tasks",
     });
   });
 });

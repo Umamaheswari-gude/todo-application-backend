@@ -24,6 +24,10 @@
 - Validate while adding task if any field is missing throws an error.
 - Add test cases for service and controller layers.
 
+**View task**
+- View all tasks with name, description, status, priority and deadline.
+- Add test cases for service and controller layers.
+
 --- 
 
 ## Technologies Used

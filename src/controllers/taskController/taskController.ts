@@ -1,4 +1,4 @@
-import { addTasks, getTasks } from "../../services/taskService/taskService"
+import { addTasks, getTasks, updateTasks } from "../../services/taskService/taskService"
 import { Request, Response } from "express";
 
 export const addTask = async (req: Request, res: Response ) => {
@@ -24,3 +24,13 @@ export const getTask = async (_req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: "Failed to fetch tasks" });
     }
   };
+
+export const updateTask = async (req: Request, res: Response ) => {
+   const { id } = req.params;
+    try {
+        const updatedTask = await updateTasks(id, req.body);
+        return res.status(200).json(updatedTask);
+    } catch (error) {
+     return res.status(500).json({ message: "Internal server error" });
+  }
+};

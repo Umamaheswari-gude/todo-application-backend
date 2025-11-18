@@ -1,5 +1,5 @@
-import { addTasks } from "../../services/addTask/addTask";
-import { addTask } from "./addTask";
+import { addTasks } from "../../services/taskService/taskService";
+import { addTask } from "./taskController";
 
 jest.mock("../../services/addTask/addTask");
 

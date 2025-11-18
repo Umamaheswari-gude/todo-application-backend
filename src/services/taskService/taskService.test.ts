@@ -1,4 +1,4 @@
-import { addTasks } from "./addTask";
+import { addTasks } from "./taskService";
 
 jest.mock("../../firebase/firebaseConfig", () => {
   return {

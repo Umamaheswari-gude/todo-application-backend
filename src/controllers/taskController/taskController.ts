@@ -1,4 +1,4 @@
-import { addTasks } from "../../services/addTask/addTask"
+import { addTasks } from "../../services/taskService/taskService"
 import { Request, Response } from "express";
 
 export const addTask = async (req: Request, res: Response ) => {

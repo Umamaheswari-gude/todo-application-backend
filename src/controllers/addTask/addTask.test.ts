@@ -30,4 +30,13 @@ describe("addTask", () => {
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith(req.body);
   });
+
+  test("should return 400 if some fields are missing", async () => {
+    req.body = { name: "Read" };
+    await addTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "All fields are required",
+    });
+  });
 });

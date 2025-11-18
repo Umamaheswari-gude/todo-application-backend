@@ -55,7 +55,7 @@ describe("addTask", () => {
       error: "Failed to create tasks",
     });
   });
-
+  
   test("should return all tasks and 200", async () => {
     const mockTasks = [
       {
@@ -71,5 +71,14 @@ describe("addTask", () => {
     await getTask(req, res);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockTasks);
+  });
+
+  test("should return 500 if service throws error", async () => {
+    (getTasks as any).mockRejectedValue(new Error("fails"));
+    await getTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Failed to fetch tasks",
+    });
   });
 });

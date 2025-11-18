@@ -19,6 +19,11 @@
 
 ## Features
 
+**Add task**
+- Add tasks with name, description, status, priority and deadline.
+- Validate while adding task if any field is missing throws an error.
+- Add test cases for service and controller layers.
+
 --- 
 
 ## Technologies Used

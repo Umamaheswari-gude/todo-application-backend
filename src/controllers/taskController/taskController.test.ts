@@ -1,7 +1,7 @@
-import { addTasks } from "../../services/taskService/taskService";
-import { addTask } from "./taskController";
+import { addTasks, getTasks } from "../../services/taskService/taskService";
+import { addTask, getTask } from "./taskController";
 
-jest.mock("../../services/addTask/addTask");
+jest.mock("../../services/taskService/taskService");
 
 describe("addTask", () => {
   let req: any;
@@ -54,5 +54,22 @@ describe("addTask", () => {
     expect(res.json).toHaveBeenCalledWith({
       error: "Failed to create tasks",
     });
+  });
+
+  test("should return all tasks and 200", async () => {
+    const mockTasks = [
+      {
+        name: "Read",
+        description: "Read the book",
+        status: "Pending",
+        priority: "Low",
+        deadline: "sep15",
+        id: "123",
+      },
+    ];
+    (getTasks as any).mockResolvedValue(mockTasks);
+    await getTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockTasks);
   });
 });

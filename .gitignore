@@ -1,1 +1,4 @@
 node_modules/
+todo-application.json
+dist/
+.env

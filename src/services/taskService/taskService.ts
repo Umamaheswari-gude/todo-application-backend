@@ -16,3 +16,10 @@ export const getTasks = async (): Promise<Task[]> => {
     id: doc.id,
   } as Task));
 };
+
+export const updateTasks = async ( id: string, updatedTask: Task ): Promise<Task> => {
+  const updateTask = taskCollection.doc(id);
+  await updateTask.get();
+  await updateTask.set({ ...updatedTask, id });
+  return { ...updatedTask, id };
+};

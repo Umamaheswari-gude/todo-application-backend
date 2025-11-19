@@ -114,4 +114,13 @@ describe("addTask", () => {
       message: "Task deleted successfully",
     });  
   });
+
+  test("should return 400 if id is missing", async () => {
+    req.params = {};
+    await deleteTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Task ID not found",
+    });
+  });
 });

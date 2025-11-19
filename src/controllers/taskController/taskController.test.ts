@@ -84,4 +84,13 @@ describe("addTask", () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(mockTask);
   });
+
+  test("should return 400 if fields are missing", async () => {
+    req.body = { name: "Read" };
+    await updateTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "All fields are required",
+    });
+  });
 });

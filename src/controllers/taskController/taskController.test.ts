@@ -1,5 +1,9 @@
-import { addTasks, getTasks } from "../../services/taskService/taskService";
-import { addTask, getTask } from "./taskController";
+import {
+  addTasks,
+  getTasks,
+  updateTasks,
+} from "../../services/taskService/taskService";
+import { addTask, getTask, updateTask } from "./taskController";
 
 jest.mock("../../services/taskService/taskService");
 
@@ -7,7 +11,7 @@ describe("addTask", () => {
   let req: any;
   let res: any;
 
-   const mockTask = {
+  const mockTask = {
     id: "1",
     name: "Read",
     description: "Read the book",
@@ -17,7 +21,7 @@ describe("addTask", () => {
   };
 
   beforeEach(() => {
-    req = { body: {} };
+    req = { params: { id: "1" }, body: {} };
     res = {
       status: jest.fn(() => res),
       json: jest.fn(),
@@ -45,14 +49,16 @@ describe("addTask", () => {
 
   test("should return 500 if service throws error", async () => {
     req.body = mockTask;
-    (addTasks as jest.Mock).mockRejectedValue(new Error("something went wrong"));
+    (addTasks as jest.Mock).mockRejectedValue(
+      new Error("something went wrong")
+    );
     await addTask(req, res);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       error: "Failed to create tasks",
     });
   });
-  
+
   test("should return all tasks and 200", async () => {
     (getTasks as jest.Mock).mockResolvedValue([mockTask]);
     await getTask(req, res);
@@ -68,5 +74,14 @@ describe("addTask", () => {
     expect(res.json).toHaveBeenCalledWith({
       error: "Failed to fetch tasks",
     });
+  });
+
+  test("should update a task and return 200", async () => {
+    req.body = mockTask;
+    (updateTasks as jest.Mock).mockResolvedValue(mockTask);
+    await updateTask(req, res);
+    expect(updateTasks).toHaveBeenCalledWith("1", mockTask);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockTask);
   });
 });

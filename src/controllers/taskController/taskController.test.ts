@@ -93,4 +93,14 @@ describe("addTask", () => {
       message: "All fields are required",
     });
   });
+
+  test("should return 500 if update service throws error", async () => {
+    req.body = mockTask;
+    (updateTasks as jest.Mock).mockRejectedValue(new Error("update failed"));
+    await updateTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Internal server error",
+    });
+  });
 });

@@ -26,3 +26,9 @@ export const updateTasks = async ( id: string, updatedTask: Task ): Promise<Task
   await updateTask.set({ ...updatedTask, id });
   return { ...updatedTask, id };
 };
+
+export const deleteTasks = async (id: string): Promise<void> => {
+  const deleteTask = taskCollection.doc(id);
+  await deleteTask.get();
+  await deleteTask.delete();
+};

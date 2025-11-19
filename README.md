@@ -33,6 +33,11 @@
 - Add validation check to throw error if any field is missed.
 - Add test cases for sevice and controller layers.
 
+**Delete task**
+- Delete the existing tasks with id
+- Add validation to throw error message if task not found by id.
+- Add test cases for service and controller layers.
+
 --- 
 
 ## Technologies Used

@@ -1,9 +1,10 @@
 import {
   addTasks,
+  deleteTasks,
   getTasks,
   updateTasks,
 } from "../../services/taskService/taskService";
-import { addTask, getTask, updateTask } from "./taskController";
+import { addTask, deleteTask, getTask, updateTask } from "./taskController";
 
 jest.mock("../../services/taskService/taskService");
 
@@ -101,6 +102,34 @@ describe("addTask", () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       message: "Internal server error",
+    });
+  });
+
+  test("should delete a task and return 200", async () => {
+    (deleteTasks as jest.Mock).mockResolvedValue(undefined);
+    await deleteTask(req, res);
+    expect(deleteTasks).toHaveBeenCalledWith("1");
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Task deleted successfully",
+    });  
+  });
+
+  test("should return 400 if id is missing", async () => {
+    req.params = {};
+    await deleteTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Task ID not found",
+    });
+  });
+
+  test("should return 500 if delete service throws error", async () => {
+    (deleteTasks as jest.Mock).mockRejectedValue(new Error("delete failed"));
+    await deleteTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Failed to delete tasks ",
     });
   });
 });

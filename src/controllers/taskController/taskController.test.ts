@@ -1,9 +1,10 @@
 import {
   addTasks,
+  deleteTasks,
   getTasks,
   updateTasks,
 } from "../../services/taskService/taskService";
-import { addTask, getTask, updateTask } from "./taskController";
+import { addTask, deleteTask, getTask, updateTask } from "./taskController";
 
 jest.mock("../../services/taskService/taskService");
 
@@ -102,5 +103,15 @@ describe("addTask", () => {
     expect(res.json).toHaveBeenCalledWith({
       message: "Internal server error",
     });
+  });
+
+  test("should delete a task and return 200", async () => {
+    (deleteTasks as jest.Mock).mockResolvedValue(undefined);
+    await deleteTask(req, res);
+    expect(deleteTasks).toHaveBeenCalledWith("1");
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Task deleted successfully",
+    });  
   });
 });

@@ -123,4 +123,13 @@ describe("addTask", () => {
       message: "Task ID not found",
     });
   });
+
+  test("should return 500 if delete service throws error", async () => {
+    (deleteTasks as jest.Mock).mockRejectedValue(new Error("delete failed"));
+    await deleteTask(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Failed to delete tasks ",
+    });
+  });
 });

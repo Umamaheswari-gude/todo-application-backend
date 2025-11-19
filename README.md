@@ -28,6 +28,11 @@
 - View all tasks with name, description, status, priority and deadline.
 - Add test cases for service and controller layers.
 
+**Update task**
+- Update all tasks with name, description, status, priority and deadline.
+- Add validation check to throw error if any field is missed.
+- Add test cases for sevice and controller layers.
+
 --- 
 
 ## Technologies Used

@@ -16,3 +16,13 @@ export const getTasks = async (): Promise<Task[]> => {
     id: doc.id,
   } as Task));
 };
+
+export const updateTasks = async ( id: string, updatedTask: Task ): Promise<Task> => {
+  const updateTask = taskCollection.doc(id);
+  const doc = await updateTask.get();
+  if (!doc.exists) {
+    throw new Error("Task not found");
+  }
+  await updateTask.set({ ...updatedTask, id });
+  return { ...updatedTask, id };
+};
